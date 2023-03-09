@@ -1,6 +1,7 @@
+import { getAllBooksDTO, updateRequest } from "repositories/BookRepositoryDTO";
 import { prisma } from "../../database";
 import { Book } from "../../entities/Book";
-import { BookRepository, updateRequest } from "../BookRepository";
+import { BookRepository } from "../BookRepository";
 
 export default class BookPrismaRepository implements BookRepository {
     async create({ author, price, title }: Book): Promise<void> {
@@ -25,12 +26,32 @@ export default class BookPrismaRepository implements BookRepository {
         }
         return book
     }
-    async getAllBooks(): Promise<Book[] | null> {
-        const books = await prisma.book.findMany()
+    async getAllBooks({ author, price, title }: getAllBooksDTO): Promise<Book[] | null> {
+        const maxPriceBook = await prisma.book.aggregate({
+            _max: {
+                price: true
+            }
+        })
+        const books = await prisma.book.findMany({
+            where: {
+                author: {
+                    contains: author
+                },
+                title: {
+                    contains: title
+                },
+                price: {
+                    gte: Number(price) || 0,
+                    lte: Number(price) + 1|| Number(maxPriceBook._max.price)
+                }
+            },
+            orderBy: {
+                price:'desc'
+            }
+        })
         if (!books) {
             return null
         }
-
         return books
     }
     async deleteBook(id: string): Promise<void> {
