@@ -5,8 +5,8 @@ import { GetAllBooksDTO } from "./GetAllBooksDTO";
 
 export default class GetAllBooksUseCase{
     constructor(private readonly bookRepository:BookRepository){}
-    async execute({author,price,title}:GetAllBooksDTO):Promise<Book[] | null>{
-        const books = await this.bookRepository.getAllBooks({author,price,title})
+    async execute({author,price,title,skip,take}:GetAllBooksDTO):Promise<Book[] | null>{
+        const books = await this.bookRepository.getAllBooks({author,price,title,skip,take})
         if(books?.length === 0){
             throw new AppError(400,"There is no registered book")
         }

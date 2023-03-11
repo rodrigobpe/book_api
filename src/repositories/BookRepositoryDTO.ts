@@ -9,4 +9,6 @@ export interface getAllBooksDTO{
     title?:string
     author?:string
     price?:number
+    skip?:number;
+    take?:number
 }
