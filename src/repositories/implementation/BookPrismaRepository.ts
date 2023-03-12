@@ -12,8 +12,8 @@ export default class BookPrismaRepository implements BookRepository {
         })
         return max
     }
-    async create({ author, price, title }: Book): Promise<void> {
-        await prisma.book.create({
+    async create({ author, price, title }: Book): Promise<Book> {
+        return await prisma.book.create({
             data: {
                 author,
                 price,
