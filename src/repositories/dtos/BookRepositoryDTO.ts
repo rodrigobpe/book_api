@@ -1,11 +1,11 @@
-export interface updateRequest{
+export interface UpdateBookRepoDTO{
     id:string
     title?:string
     author?:string
     price?:number
 }
 
-export interface getAllBooksDTO{
+export interface GetAllBooksRepoDTO{
     title?:string
     author?:string
     price?:number

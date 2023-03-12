@@ -1,4 +1,4 @@
-import { getAllBooksDTO, updateRequest } from "repositories/BookRepositoryDTO";
+import { UpdateBookRepoDTO, GetAllBooksRepoDTO } from "repositories/dtos/BookRepositoryDTO";
 import { prisma } from "../../database";
 import { Book } from "../../entities/Book";
 import { BookRepository } from "../BookRepository";
@@ -34,7 +34,7 @@ export default class BookPrismaRepository implements BookRepository {
         }
         return book
     }
-    async getAllBooks({ author, price, title, skip, take }: getAllBooksDTO): Promise<Book[] | null> {
+    async getAllBooks({ author, price, title, skip, take }: GetAllBooksRepoDTO): Promise<Book[] | null> {
         const books = await prisma.book.findMany({
             where: {
                 author: {
@@ -79,7 +79,7 @@ export default class BookPrismaRepository implements BookRepository {
         }
         return book
     }
-    async updateBook({ id, author, price, title }: updateRequest): Promise<void> {
+    async updateBook({ id, author, price, title }: UpdateBookRepoDTO): Promise<void> {
         await prisma.book.update({
             data: {
                 author,
