@@ -4,3 +4,11 @@ export interface UpdateUserRepoDTO{
     name?:string;
     password?:string;
 }
+
+export interface GetAllUsersRepoDTO{
+    email?:string;
+    name?:string;
+}
+
+
+

@@ -1,12 +1,44 @@
 import { prisma } from "../../database/index";
 import { User } from "../../entities/User";
 import { UserRepository } from "repositories/UserRepository";
-import { UpdateUserRepoDTO } from "repositories/dtos/UserRepositoryDTO";
+import { GetAllUsersRepoDTO, UpdateUserRepoDTO } from "repositories/dtos/UserRepositoryDTO";
 
 export default class UserPrismaRepository implements UserRepository {
-    async getById(id_user: string): Promise<User | null> {
+    async getAllUsers({ email, name }: GetAllUsersRepoDTO): Promise<Omit<User,"password">[] | null>  {
+        const users = await prisma.user.findMany({
+            where:{
+                email:{
+                    contains:email
+                },
+                name:{
+                    contains:name
+                }
+            },
+            select:{
+                id_user:true,
+                email:true,
+                name:true,
+                password:false
+            },
+            orderBy:{
+                email:"asc"
+            }
+        })
+        if(!users){
+            return null
+        }
+
+        return users
+    }
+    async getById(id_user: string): Promise<Omit<User,"password"> | null> {
         const user = await prisma.user.findFirst({
-            where: { id_user }
+            where: { id_user },
+            select:{
+                id_user:true,
+                name:true,
+                email:true,
+                password:false
+            }
         })
         if(!user){
             return null
